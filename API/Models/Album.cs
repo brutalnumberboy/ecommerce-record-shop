@@ -5,7 +5,7 @@ namespace API.Models
     public class Album
     {
         [Key]
-        public int AlbumId {get; set;}
+        public int Id {get; set;}
         public string Genre {get; set;}
         [Required]
         public string? Description {get; set;}
