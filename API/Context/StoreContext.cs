@@ -1,9 +1,10 @@
 using API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace API.Context
 {
-    public class StoreContext : DbContext
+    public class StoreContext : IdentityDbContext<User>
     {
 
         public StoreContext(DbContextOptions options) : base(options)
@@ -34,7 +35,6 @@ namespace API.Context
                 Length = 55,
             });
         }
-        public DbSet<User> Users {get; set;}
         public DbSet<Album> Albums { get; set; }
 
     }
