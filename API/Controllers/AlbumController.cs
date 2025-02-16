@@ -26,14 +26,6 @@ namespace API.Controllers
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(albums));
         }
 
-        // api/album/{id}
-        [HttpGet("id")]
-        public async Task<ActionResult<AlbumDTO>> GetAlbumById(int id)
-        {
-            var album = await _context.Albums.FindAsync(id);
-            return Ok(_mapper.Map<AlbumDTO>(album));
-        }
-
         // api/album/search?query={album title or artist name}
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<AlbumDTO>>> SearchAlbumByTitleOrArtist([FromQuery] string query)
