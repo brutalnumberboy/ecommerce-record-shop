@@ -5,16 +5,17 @@ namespace API.Context
 {
     public class StoreContext : DbContext
     {
+
         public StoreContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Album> Albums { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Album>().HasData(new Album
             {
-                AlbumId = 1,
+                Id = 1,
                 Genre = "Metal",
                 Description = "None",
                 YearReleased = 1992,
@@ -24,7 +25,7 @@ namespace API.Context
             });
             modelBuilder.Entity<Album>().HasData(new Album
             {
-                AlbumId = 2,
+                Id = 2,
                 Genre = "Metal",
                 Description = "None",
                 YearReleased = 1984,
@@ -33,6 +34,8 @@ namespace API.Context
                 Length = 55,
             });
         }
+        public DbSet<User> Users {get; set;}
+        public DbSet<Album> Albums { get; set; }
 
     }
 }
