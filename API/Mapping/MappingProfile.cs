@@ -8,6 +8,9 @@ namespace API.Mapping
     {
         public MappingProfile(){
             CreateMap<Album, AlbumDTO>();
+            CreateMap <RegisterDTO, User>();
+            CreateMap <LoginDTO, User>();
+            CreateMap <User, UserDTO>();
         }
     }
 }
