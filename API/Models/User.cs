@@ -9,12 +9,12 @@ namespace API.Models
     {
         [Key]
         public int Id {get; set;}
+        [Required(AllowEmptyStrings = false)]
+        [RegularExpression(@"^[a-zA-Z0-9]+$")]
+        public override string UserName {get; set;}
         [Required]
-        public string UserName {get; set;}
-        [Required]
-        public string Email {get; set;}
-        [Required]
-        [PasswordPropertyText]
-        public string Password {get; set;}
+        [EmailAddress]
+        public override string Email {get; set;}
+        public string? Token {get; set;}
     }
 }

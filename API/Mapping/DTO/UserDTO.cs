@@ -8,10 +8,8 @@ namespace API.Mapping.DTO
 {
     public class UserDTO
     {
-        [Required]
         public string UserName {get; set;}
-        [Required]
-        [EmailAddress]
         public string Email {get; set;}
+        public string Token {get; set;}
     }
 }
