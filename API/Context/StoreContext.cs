@@ -36,6 +36,8 @@ namespace API.Context
             });
         }
         public DbSet<Album> Albums { get; set; }
+        public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<UserBasket> UserBaskets { get; set; }
 
     }
 }
