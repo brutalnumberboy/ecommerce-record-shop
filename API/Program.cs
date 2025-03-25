@@ -16,17 +16,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<StoreContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<StoreContext>();
-builder.Services.AddAuthentication().AddJwtBearer(jwtOptions => {
-    jwtOptions.Authority = builder.Configuration["Jwt:Authority"];
-	jwtOptions.Audience = builder.Configuration["Jwt:Audience"];
-	jwtOptions.TokenValidationParameters = new TokenValidationParameters
-	{
-		ValidateIssuer = true,
-		ValidateAudience = true,
-		ValidateIssuerSigningKey = true,
-	};
-
-});
 
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddEndpointsApiExplorer();
