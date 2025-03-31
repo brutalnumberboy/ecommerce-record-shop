@@ -11,6 +11,8 @@ namespace API.Mapping
             CreateMap <RegisterDTO, User>();
             CreateMap <LoginDTO, User>();
             CreateMap <User, UserDTO>();
+            CreateMap <UserBasket, UserBasketDTO>().ReverseMap();
+            CreateMap <BasketItem, BasketItemDTO>().ReverseMap();
         }
     }
 }
