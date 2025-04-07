@@ -9,6 +9,7 @@ using API.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -28,15 +29,36 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<UserBasketDTO>> getUserBasket(int id) {
-                var basket = await _context.UserBaskets.FindAsync(id);
-                return Ok(basket == null ? null : new UserBasketDTO { BasketItems = _mapper.Map<List<BasketItemDTO>>(basket.BasketItems), TotalPrice = basket.TotalPrice, ShippingAddress = basket.ShippingAddress, ShippingPrice = basket.ShippingPrice });
+        [HttpPost]
+        public async Task<ActionResult<UserBasketDTO>> createUserBasket([FromBody] UserBasketDTO basket)
+        {
+            var userBasket = new UserBasket
+            {
+                BasketItems = basket.BasketItems.Select(item => new BasketItem
+                {
+                    Title = item.Title,
+                    Amount = item.Amount,
+                    Price = item.Price,
+                    AlbumId = item.AlbumId
+                }).ToList(),
+                TotalPrice = basket.TotalPrice,
+                ShippingAddress = basket.ShippingAddress,
+                ShippingPrice = basket.ShippingPrice
+            };
 
+            _context.UserBaskets.Add(userBasket);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(getUserBasket), new { id = userBasket.Id }, basket);
+        }
+
+        [HttpGet("id")]
+        public async Task<ActionResult<UserBasketDTO>> getUserBasket(int id) {
+                var basket = await _context.UserBaskets.Include(b => b.BasketItems).FirstOrDefaultAsync(b => b.Id == id);
+                return Ok(basket == null ? null : new UserBasketDTO { BasketItems = _mapper.Map<List<BasketItemDTO>>(basket.BasketItems), TotalPrice = basket.TotalPrice, ShippingAddress = basket.ShippingAddress, ShippingPrice = basket.ShippingPrice });
         }
         
-        [HttpPost]
-        public async Task<ActionResult<UserBasketDTO>> updateUserBasket(int id, UserBasketDTO basket) {
+        [HttpPost("id")]
+        public async Task<ActionResult<UserBasketDTO>> updateUserBasket(int id, [FromBody] UserBasketDTO basket) {
             var userBasket = await _context.UserBaskets.FindAsync(id);
             if (userBasket == null) {
                 return NotFound();
