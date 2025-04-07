@@ -25,6 +25,15 @@ builder.Services.AddOpenApiDocument(config =>
     config.Title = "StoreAPI v1";
     config.Version = "v1";
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 
 var app = builder.Build();
@@ -42,6 +51,9 @@ if (app.Environment.IsDevelopment())
         config.DocExpansion = "list";
     });
 }
+
+
+app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 
