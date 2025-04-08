@@ -50,5 +50,21 @@ namespace API.Controllers
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(await albums.ToListAsync()));
         }
 
+        [HttpGet("random")]
+        public async Task<ActionResult<AlbumDTO>> GetRandomAlbum([FromQuery] int? count)
+        {
+            var albumCount = await _context.Albums.CountAsync();
+            if (albumCount == 0)
+            {
+                return NotFound("No albums available.");
+            }
+
+            int takeCount = count ?? 1;
+            takeCount = Math.Min(takeCount, albumCount);
+            var randomAlbum = await _context.Albums.OrderBy(r => Guid.NewGuid()).Take(takeCount).ToListAsync();
+
+            return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(randomAlbum));
+        }
+
     }
 }
