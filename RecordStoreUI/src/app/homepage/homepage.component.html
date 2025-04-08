@@ -1,0 +1,21 @@
+<<div class="homepage-container">
+    <header class="header">
+    <nav>
+        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/search" class="btn">Search</a>
+    </nav>
+    </header>
+  
+    <section id="features" class="features">
+        <div class="albums">
+            <div *ngIf="randomAlbums.length === 0">No albums available.</div>
+            <div *ngFor="let album of randomAlbums" class="album" style="background-color: #FF0000;">
+                <img src="vinyl.png" alt="{{album.title}}">
+            </div>
+        </div>
+    </section>
+  
+    <footer class="footer">
+      <p>&copy; 2025 Record Shop. All rights reserved.</p>
+    </footer>
+  </div>>

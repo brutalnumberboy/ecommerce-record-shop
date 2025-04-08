@@ -1,0 +1,46 @@
+.homepage-container {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #FFA500, #FF4500);
+    color: #333;
+}
+
+.header {
+    background-color: #FF4500;
+    padding: 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #FFA500;
+    margin: 0 5px;
+}
+
+.albums {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.album {
+    background-color: #fff;
+    border: 2px solid #FF4500;
+    margin: 10px;
+    padding: 20px;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album img {
+    max-width: 100%;
+    max-height: 100%;
+}
