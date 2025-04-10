@@ -1,8 +1,9 @@
-<<div class="homepage-container">
+<div class="homepage-container">
     <header class="header">
     <nav>
         <a routerLink="/albums" class="btn">Bestsellers</a>
         <a routerLink="/search" class="btn">Search</a>
+        <a routerLink="/login" class="btn">Login</a>
     </nav>
     </header>
   
@@ -10,12 +11,12 @@
         <div class="albums">
             <div *ngIf="randomAlbums.length === 0">No albums available.</div>
             <div *ngFor="let album of randomAlbums" class="album" style="background-color: #FF0000;">
-                <img src="vinyl.png" alt="{{album.title}}">
+                <img [src]="album.imageUrl" [alt]="album.title">
             </div>
         </div>
     </section>
   
     <footer class="footer">
-      <p>&copy; 2025 Record Shop. All rights reserved.</p>
+      <p>&hearts; 2025 Record Shop.</p>
     </footer>
-  </div>>
+  </div>
