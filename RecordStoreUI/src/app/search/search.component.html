@@ -1,0 +1,28 @@
+<div class="search-container">
+  <header class="header">
+    <nav>
+        <a routerLink="/" class="btn">Home</a>
+        <a routerLink="/albums" class="btn">Discover</a>
+    </nav>
+    </header>
+
+    <h2>Search Albums</h2>
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Enter album title or artist" />
+    <button (click)="searchAlbums()">Search</button>
+  
+    <div *ngIf="searchResults && searchResults.length > 0">
+      <ul>
+        <li *ngFor="let album of searchResults">
+          <h3>{{ album.title }} by {{ album.artist }}</h3>
+          <img [src]="album.imageUrl" [alt]="album.title" width="100" />
+          <p>Genre: {{ album.genre }}</p>
+          <p>Released: {{ album.yearReleased }}</p>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="searchResults && searchResults.length === 0">
+      <p>No search results.</p>
+    </div>
+    
+    
+  </div>
