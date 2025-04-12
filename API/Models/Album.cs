@@ -15,5 +15,6 @@ namespace API.Models
         [Required]
         public string Title {get; set; }
         public int Length {get; set; }
+        public string? ImageUrl {get; set; }
     }
 }
