@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 namespace API.Authorization
 {
@@ -19,7 +21,7 @@ namespace API.Authorization
         }
 
         public string NewToken(User user){
-            var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.Email, user.Email), new Claim(JwtRegisteredClaimNames.Name, user.UserName)};
+            var claims = new List<Claim> { new Claim(JwtRegisteredClaimNames.Email, user.Email), new Claim(JwtRegisteredClaimNames.Name, user.UserName), new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
             var tokenDescriptor = new SecurityTokenDescriptor
