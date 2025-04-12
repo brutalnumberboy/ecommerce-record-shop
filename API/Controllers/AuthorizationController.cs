@@ -119,11 +119,6 @@ namespace API.Controllers
         [Authorize]
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
-            var claims = User.Claims.Select(c => $"{c.Type}: {c.Value}");
-            Console.WriteLine("User claims:");
-            foreach (var claim in claims)
-                Console.WriteLine(claim);
-            
             var email = User.FindFirstValue("email");
             if (email == null)
             {
