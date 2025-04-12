@@ -4,6 +4,9 @@ using API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace API.Controllers
 {
@@ -42,7 +45,11 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            return new UserDTO { UserName = user.UserName, Email = user.Email, Token = _tokenService.NewToken(user) };
+            var token = _tokenService.NewToken(user);
+            user.Token = token;
+            await _userManager.UpdateAsync(user);
+
+            return new UserDTO { UserName = user.UserName, Email = user.Email, Token = token };
         }
 
         [HttpPost("login")]
@@ -67,7 +74,69 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            return new UserDTO { UserName = user.UserName, Email = user.Email, Token = _tokenService.NewToken(user) };
+            var token = _tokenService.NewToken(user);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(30),
+                SameSite = SameSiteMode.None,
+                Secure = true
+            };
+            Response.Cookies.Append("jwt", token, cookieOptions);
+
+            user.Token = token;
+            await _userManager.UpdateAsync(user);
+
+            return new UserDTO { UserName = user.UserName, Email = user.Email, Token = token };
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var email = User.FindFirstValue("email");
+            if (email == null)
+            {
+                return Unauthorized("Email claim missing.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+        
+            Response.Cookies.Delete("jwt");
+
+            user.Token = null;
+            await _userManager.UpdateAsync(user);
+
+            return Ok("Logged out successfully.");
+        }
+
+        [HttpGet("current")]
+        [Authorize]
+        public async Task<ActionResult<UserDTO>> GetCurrentUser()
+        {
+            var claims = User.Claims.Select(c => $"{c.Type}: {c.Value}");
+            Console.WriteLine("User claims:");
+            foreach (var claim in claims)
+                Console.WriteLine(claim);
+            
+            var email = User.FindFirstValue("email");
+            if (email == null)
+            {
+                return Unauthorized("Email claim missing.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return new UserDTO { UserName = user.UserName, Email = user.Email, Token = user.Token! };
         }
     }
 }
