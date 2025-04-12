@@ -19,7 +19,7 @@ namespace API.Controllers
         }
 
         // api/album
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<AlbumDTO>>> GetAllAlbums()
         {
             var albums = await _context.Albums.ToListAsync();
@@ -36,17 +36,17 @@ namespace API.Controllers
 
         // api/album/filter?{genre or year}=
         [HttpGet("filter")]
-        public async Task<ActionResult<IEnumerable<AlbumDTO>>> FilterAlbums([FromQuery] string? genre, int? year)
+        public async Task<ActionResult<IEnumerable<AlbumDTO>>> FilterAlbums([FromQuery] string[]? genre, [FromQuery] int[]? year)
         {
+            
             var albums = _context.Albums.AsQueryable();
-            if (!string.IsNullOrEmpty(genre)){
-                albums = albums.Where(search => search.Genre.Equals(genre));
+            if (genre != null && genre.Length > 0){
+                albums = albums.Where(search => genre.Contains(search.Genre));
             }
 
-            if (year.HasValue){
-                albums = albums.Where(search => search.YearReleased.Equals(year));
+            if (year != null && year.Length > 0){
+                albums = albums.Where(search => year.Contains(search.YearReleased));
             }
-
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(await albums.ToListAsync()));
         }
 
@@ -64,6 +64,16 @@ namespace API.Controllers
             var randomAlbum = await _context.Albums.OrderBy(r => Guid.NewGuid()).Take(takeCount).ToListAsync();
 
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(randomAlbum));
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AlbumDTO>> GetAlbumById(int id)
+        {
+            var album = await _context.Albums.FindAsync(id);
+            if (album == null)
+            {
+                return NotFound("Album not found.");
+            }
+            return Ok(_mapper.Map<AlbumDTO>(album));
         }
 
     }
