@@ -78,7 +78,7 @@ namespace API.Controllers
 
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,
+                HttpOnly = false,
                 Expires = DateTime.UtcNow.AddDays(30),
                 SameSite = SameSiteMode.None,
                 Secure = true
