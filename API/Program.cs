@@ -58,7 +58,13 @@ builder.Services.AddAuthentication(options =>
         OnMessageReceived = context =>
         {
             var token = context.Request.Cookies["jwt"];
+            Console.WriteLine("JWT from cookie: " + token);
             context.Token = token;
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("AUTH FAILED: " + context.Exception?.Message);
             return Task.CompletedTask;
         }
     };
@@ -73,7 +79,6 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         NameClaimType = ClaimTypes.NameIdentifier,
-        RoleClaimType = ClaimTypes.Role,
     };
 });
 
@@ -98,7 +103,12 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
-
+app.Use(async (context, next) =>
+{
+    var jwtCookie = context.Request.Cookies["jwt"];
+    Console.WriteLine("jwt cookie: " + jwtCookie);
+    await next();
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
