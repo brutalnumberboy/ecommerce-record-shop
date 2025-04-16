@@ -66,7 +66,7 @@ namespace API.Controllers
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(randomAlbum));
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<AlbumDTO>> GetAlbumById(int id)
+        public async Task<ActionResult<AlbumDTO>> GetAlbumById(string id)
         {
             var album = await _context.Albums.FindAsync(id);
             if (album == null)
