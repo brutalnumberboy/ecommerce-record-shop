@@ -3,7 +3,7 @@ namespace API.Mapping.DTO
 {
     public class AlbumDTO
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Genre { get; set; }
         public string? Description { get; set; }
         public int YearReleased { get; set; }
@@ -12,5 +12,6 @@ namespace API.Mapping.DTO
         public int Length { get; set; }
         public bool InStock { get; set; }
         public string? ImageUrl { get; set; }
+        public int Price { get; set; }
     }
 }
