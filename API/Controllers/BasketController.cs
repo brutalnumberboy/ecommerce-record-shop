@@ -10,6 +10,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -29,46 +32,262 @@ namespace API.Controllers
             _context = context;
         }
 
+        private string? GetUserIdFromToken()
+        {
+            var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+            if (authHeader == null)
+            {
+                return null;
+            }
+
+            var token = authHeader.StartsWith("Bearer ") ? authHeader.Substring("Bearer  ".Length).Trim() : authHeader;
+            var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            return userId;
+        }
+
         [HttpPost]
         public async Task<ActionResult<UserBasketDTO>> createUserBasket([FromBody] UserBasketDTO basket)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized("User not logged in.");
+            }
+            decimal totalPrice = 0;
+            var basketItems = new List<BasketItem>();
+
+            foreach (var item in basket.BasketItems)
+            {
+                var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == item.AlbumId);
+                if (album == null)
+                {
+                    return BadRequest($"Album with ID {item.AlbumId} not found.");
+                }
+
+                basketItems.Add(new BasketItem
+                {
+                    Amount = item.Amount,
+                    AlbumId = item.AlbumId,
+                    Album = album, 
+                    UserId = userId
+                });
+                totalPrice += album.Price * item.Amount; 
+
+            }
             var userBasket = new UserBasket
             {
-                BasketItems = basket.BasketItems.Select(item => new BasketItem
+                BasketItems = basketItems,
+                TotalPrice = totalPrice,
+                ShippingAddress = basket.ShippingAddress,
+                ShippingPrice = basket.ShippingPrice,
+                UserId = userId,
+            };
+
+            _context.UserBaskets.Add(userBasket);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(getBasketByUserId), new { id = userId }, basket);
+        }
+
+        [Authorize]
+        [HttpPut("current")]
+        public async Task<ActionResult<UserBasketDTO>> updateUserBasket([FromBody] UserBasketInputDTO basket)
+        {
+            var userId = User.FindFirst("nameid")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            if (basket == null)
+            {
+                return NotFound("Basket not found for the current user.");
+            }
+            var userBasket = await _context.UserBaskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+            if (userBasket == null)
+            {
+                return NotFound();
+            }
+
+            decimal totalPrice = 0;
+
+            // Remove items not in the new basket
+            var incomingIds = basket.BasketItems.Select(i => i.AlbumId).ToList();
+            userBasket.BasketItems.RemoveAll(bi => !incomingIds.Contains(bi.AlbumId));
+
+            foreach (var item in basket.BasketItems)
+            {
+                var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == item.AlbumId);
+                if (album == null)
                 {
-                    Title = item.Title,
-                    Amount = item.Amount,
-                    Price = item.Price,
-                    AlbumId = item.AlbumId
+                    return BadRequest($"Album with ID {item.AlbumId} not found.");
+                }
+
+                var existingItem = userBasket.BasketItems.FirstOrDefault(bi => bi.AlbumId == item.AlbumId);
+                if (existingItem != null)
+                {
+                    existingItem.Amount = item.Amount;
+                }
+                else
+                {
+                    userBasket.BasketItems.Add(new BasketItem
+                    {
+                        Amount = item.Amount,
+                        AlbumId = item.AlbumId,
+                        Album = album,
+                        UserId = userId
+                    });
+                }
+                totalPrice += album.Price * item.Amount;
+            }
+
+            userBasket.TotalPrice = totalPrice;
+            userBasket.ShippingAddress = basket.ShippingAddress;
+            userBasket.ShippingPrice = basket.ShippingPrice;
+
+            await _context.SaveChangesAsync();
+            return Ok(basket);
+        }
+
+        [Authorize]
+        [HttpGet("current")]
+        public async Task<ActionResult<UserBasketDTO>> GetCurrentUserBasket()
+        {
+            var userId = User.FindFirst("nameid")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            var result = await this.getBasketByUserId(userId);
+            var basket = result.Value;
+
+            if (basket == null)
+            {
+                return NotFound("Basket not found for the current user.");
+            }
+
+            var basketDto = new UserBasketDTO
+            {
+                BasketItems = basket.BasketItems.Select(item => new BasketItemDTO
+                {
+                    AlbumId = item.AlbumId,
+                    Title = item.Album?.Title,
+                    Artist = item.Album?.Artist,
+                    Price = item.Album?.Price ?? 0,
+                    Amount = item.Amount
                 }).ToList(),
                 TotalPrice = basket.TotalPrice,
                 ShippingAddress = basket.ShippingAddress,
                 ShippingPrice = basket.ShippingPrice
             };
 
-            _context.UserBaskets.Add(userBasket);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(getUserBasket), new { id = userBasket.Id }, basket);
+            return Ok(basketDto);
         }
 
-        [HttpGet("id")]
-        public async Task<ActionResult<UserBasketDTO>> getUserBasket(int id) {
-                var basket = await _context.UserBaskets.Include(b => b.BasketItems).FirstOrDefaultAsync(b => b.Id == id);
-                return Ok(basket == null ? null : new UserBasketDTO { BasketItems = _mapper.Map<List<BasketItemDTO>>(basket.BasketItems), TotalPrice = basket.TotalPrice, ShippingAddress = basket.ShippingAddress, ShippingPrice = basket.ShippingPrice });
+        [Authorize]
+        [HttpPost("add")]
+        public async Task<IActionResult> AddAlbumToBasket([FromBody] BasketItemInputDTO basketItemDto)
+        {
+            var userId = User.FindFirst("nameid")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            var userBasket = await _context.UserBaskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (userBasket == null)
+            {
+                userBasket = new UserBasket
+                {
+                    UserId = userId,
+                    BasketItems = new List<BasketItem>(),
+                    TotalPrice = 0,
+                    ShippingAddress = "",
+                    ShippingPrice = 0
+                };
+                _context.UserBaskets.Add(userBasket);
+            }
+
+            var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == basketItemDto.AlbumId);
+
+            var basketItem = userBasket.BasketItems.FirstOrDefault(b => b.AlbumId == basketItemDto.AlbumId);
+            if (basketItem == null)
+            {
+                basketItem = new BasketItem
+                {
+                    AlbumId = basketItemDto.AlbumId,
+                    Amount = basketItemDto.Amount,
+                    Album = album,
+                    UserId = userId
+                };
+                userBasket.BasketItems.Add(basketItem);
+            }
+            else
+            {
+                basketItem.Amount += basketItemDto.Amount;
+            }
+
+            userBasket.TotalPrice += album.Price * basketItemDto.Amount;
+
+            await _context.SaveChangesAsync();
+            return Ok("Album added to basket.");
         }
-        
-        [HttpPost("id")]
-        public async Task<ActionResult<UserBasketDTO>> updateUserBasket(int id, [FromBody] UserBasketDTO basket) {
-            var userBasket = await _context.UserBaskets.FindAsync(id);
-            if (userBasket == null) {
+
+        [Authorize]
+        [HttpPost("remove")]
+        public async Task<IActionResult> RemoveAlbumFromBasket([FromQuery] BasketItemInputDTO basketItemDTO)
+        {
+            var userId = User.FindFirst("nameid")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            var userBasket = await _context.UserBaskets
+                .Include(b => b.BasketItems)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (userBasket == null)
+            {
+                return NotFound("Basket not found for the current user.");
+            }
+
+            var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == basketItemDTO.AlbumId);
+
+            var basketItem = userBasket.BasketItems.FirstOrDefault(b => b.AlbumId == basketItemDTO.AlbumId);
+
+            if (basketItem == null)
+            {
+                return NotFound("Album not found in the basket.");
+            }
+
+            userBasket.BasketItems.Remove(basketItem);
+            userBasket.TotalPrice += album.Price * basketItemDTO.Amount;
+
+            await _context.SaveChangesAsync();
+            return Ok("Album removed from basket.");
+        }
+
+        public async Task<ActionResult<UserBasket>> getBasketByUserId(string userId)
+        {
+            var basket = await _context.UserBaskets
+                .Include(b => b.BasketItems)
+                    .ThenInclude(i => i.Album)
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (basket == null)
+            {
                 return NotFound();
             }
-            userBasket.BasketItems = _mapper.Map<List<BasketItem>>(basket.BasketItems);
-            userBasket.TotalPrice = basket.TotalPrice;
-            userBasket.ShippingAddress = basket.ShippingAddress;
-            userBasket.ShippingPrice = basket.ShippingPrice;
-            await _context.SaveChangesAsync();
-            return Ok(basket);
+
+            return basket;
         }
     }
 }
