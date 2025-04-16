@@ -9,10 +9,12 @@ namespace API.Models
     public class BasketItem
     {
         [Key]
-        public int Id {get; set;}
-        public required int Amount {get; set;}
-        public required string Title {get; set;}
-        public required int Price {get; set;}
-        public required int AlbumId {get; set;}
+        public int Id { get; set; }
+        public  int Amount {get; set;}
+        public string AlbumId {get; set;}
+        public Album? Album { get; set; }
+
+        public string UserId { get; set; }
+        public User User { get; set; }
     }
 }
