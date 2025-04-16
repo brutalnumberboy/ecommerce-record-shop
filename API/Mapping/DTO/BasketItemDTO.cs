@@ -1,11 +1,12 @@
+using API.Models;
 namespace API.Mapping.DTO
 {
     public class BasketItemDTO
     {
-        public required int Id {get; set;}
-        public required int Amount {get; set;}
-        public required string Title {get; set;}
-        public required int Price {get; set;}
-        public required int AlbumId {get; set;}
+        public int Amount {get; set;}
+        public string AlbumId {get; set;}
+        public string Title {get; set;}
+        public string Artist {get; set;}
+        public decimal Price {get; set;}
     }
 }
