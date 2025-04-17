@@ -1,0 +1,17 @@
+<div class="navigation">
+  <header class="header">
+    <nav>
+        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/search" class="btn">Search</a>
+    </nav>
+  </header>
+</div>
+<div class="album-details-container" *ngIf="album">
+    <h1>{{ album.title }}</h1>
+    <h2>{{ album.artist }}</h2>
+    <p>Genre: {{ album.genre }}</p>
+    <p>Released: {{ album.yearReleased }}</p>
+    <p>{{ album.description }}</p>
+    <img [src]="album.imageUrl" [alt]="album.title"/>
+    <button (click)="addToBasket()">Add to Basket</button>
+  </div>
