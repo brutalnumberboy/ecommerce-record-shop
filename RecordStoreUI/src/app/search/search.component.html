@@ -3,6 +3,13 @@
     <nav>
         <a routerLink="/" class="btn">Home</a>
         <a routerLink="/albums" class="btn">Discover</a>
+        <ng-container *ngIf="currentUser; else showLogin">
+          <span class="btn">{{ currentUser.userName }}</span>
+          <button (click)="logout()" routerLink="/login">Logout</button>
+        </ng-container>
+        <ng-template #showLogin>
+          <a routerLink="/login" class="btn">Login</a>
+        </ng-template>
     </nav>
     </header>
 
@@ -13,7 +20,7 @@
     <div *ngIf="searchResults && searchResults.length > 0">
       <ul>
         <li *ngFor="let album of searchResults">
-          <h3>{{ album.title }} by {{ album.artist }}</h3>
+          <h3> <a [routerLink]="['/albums', album.id]"> {{ album.title }} </a> by {{ album.artist }}</h3>
           <img [src]="album.imageUrl" [alt]="album.title" width="100" />
           <p>Genre: {{ album.genre }}</p>
           <p>Released: {{ album.yearReleased }}</p>
