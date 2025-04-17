@@ -1,0 +1,34 @@
+<div class="basket-container">
+  <header class="header">
+    <nav>
+        <a routerLink="/homepage" class="btn">Login</a>
+        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/search" class="btn">Search</a>
+    </nav>
+  </header>
+  <div class="basket-content">
+    <h2>Your Basket</h2>
+    <div *ngIf="basket.basketItems.length > 0; else emptyBasket">
+      <div *ngFor="let item of basket.basketItems; let i = index" class="basket-item">
+        <h3>{{ item.title }}</h3>
+        <p>Artist: {{ item.artist }}</p>
+        <p>Price: {{ item.price | currency }}</p>
+        <p>Amount: 
+          <input type="number" [(ngModel)]="item.amount" min="1" />
+        </p>
+        <button (click)="removeFromBasket(item); updateUserBasket()">Remove</button>
+      </div>
+    </div>
+    <ng-template #emptyBasket>
+      <p>Your basket is empty.</p>
+    </ng-template>
+    
+    <div class="basket-summary">
+      <p>Total Price: {{ basket.totalPrice | currency }}</p>
+      <p>Shipping Price: {{ basket.shippingPrice | currency }}</p>
+      <p>Shipping Address: 
+        <input type="text" [(ngModel)]="basket.shippingAddress" />
+      </p>
+      <button (click)="updateUserBasket()">Save Basket</button>
+    </div>
+  </div>
