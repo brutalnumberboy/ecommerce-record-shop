@@ -1,0 +1,91 @@
+.header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 14px;
+  }
+  
+  .header nav {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  
+  .header .btn, .header button {
+    background: #222;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: 4px;
+  }
+  
+  .header .btn:hover, .header button:hover {
+    background: #444;
+  }
+  
+  .header span.btn {
+    background: #eee;
+    color: #333;
+    cursor: default;
+  }
+
+  .album-details-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.09);
+    padding: 32px 28px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .album-details-container img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+  }
+  
+  .album-details-container h1 {
+    font-size: 2rem;
+    margin: 0 0 8px 0;
+    color: #222;
+  }
+  
+  .album-details-container h2 {
+    font-size: 1.2rem;
+    margin: 0 0 12px 0;
+    color: #444;
+  }
+  
+  .album-details-container p {
+    margin: 6px 0;
+    color: #555;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  .album-details-container button {
+    margin-top: 18px;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 28px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background 0.2s;
+  }
+  
+  .album-details-container button:hover {
+    background: #0d47a1;
+  }

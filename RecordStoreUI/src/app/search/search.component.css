@@ -1,0 +1,100 @@
+.search-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    padding: 32px 24px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 14px;
+  }
+  
+  .header nav {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  
+  .header .btn, .header button {
+    background: #222;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: 4px;
+  }
+  
+  .header .btn:hover, .header button:hover {
+    background: #444;
+  }
+  
+  .header span.btn {
+    background: #eee;
+    color: #333;
+    cursor: default;
+  }
+  
+  .search-container h2 {
+    margin-bottom: 18px;
+    color: #222;
+    font-size: 1.5rem;
+  }
+  
+  .search-container input[type="text"] {
+    width: 60%;
+    padding: 7px 10px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .search-container button {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+  
+  .search-container button:hover {
+    background: #0d47a1;
+  }
+  
+  .search-container ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .search-container li {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  
+  .search-container img {
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  
+  .search-container p {
+    margin: 4px 0;
+    color: #555;
+  }
