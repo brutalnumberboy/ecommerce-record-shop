@@ -1,0 +1,48 @@
+<div class="albums-container">
+  <header class="header">
+    <nav>
+        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/search" class="btn">Search</a>
+    </nav>
+    </header>
+    <div class="filters">
+        <div class="filters-genre">
+          <ul>
+            <h3>Filter by Genre</h3>
+              <li *ngFor="let genre of genres">
+              <input type="checkbox"
+                    [value]="genre"
+                    (change)="onGenreChange($event)" />
+              <label>
+                {{ genre }}
+              </label>
+          </ul>
+        </div>
+        <div class="filters-year">
+          <ul>
+            <h3>Filter by Year</h3>
+                <li *ngFor="let year of years">
+                  <input type="checkbox"
+                        [value]="year" 
+                        (change)="onYearChange($event)"/>
+              <label>
+                  {{ year }}
+              </label>
+          </ul>
+        </div>
+      </div>
+    <div class="album-list">
+        <div class="album-card" *ngFor="let album of filteredAlbums">
+        <a [routerLink]="['/albums', album.id]">
+          <img [src]="album.imageUrl" [alt]="album.title" />
+          <div class="album-details">
+              <h3>{{ album.title }}</h3>
+              <p>{{ album.artist }}</p>
+              <p>Genre: {{ album.genre }}</p>
+              <p>Released: {{ album.yearReleased }}</p>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+  </div>
