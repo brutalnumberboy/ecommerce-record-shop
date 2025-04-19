@@ -30,7 +30,7 @@ namespace API.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<AlbumDTO>>> SearchAlbumByTitleOrArtist([FromQuery] string query)
         {
-            var result = await _context.Albums.Where(search => search.Title.Contains(query) || search.Artist.Contains(query)).ToListAsync();
+            var result = await _context.Albums.Where(search => search.Title.ToLower().Contains(query) || search.Artist.ToLower().Contains(query)).ToListAsync();
             return Ok(_mapper.Map<IEnumerable<AlbumDTO>>(result));
         }
 
