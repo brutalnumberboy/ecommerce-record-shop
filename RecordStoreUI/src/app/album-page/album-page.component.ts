@@ -46,16 +46,15 @@ export class AlbumPageComponent {
       console.error('No album loaded to add to basket.');
       return;
     }
-    const token = localStorage.getItem('jwt'); // Replace 'authToken' with the actual cookie name storing the JWT
+    const token = localStorage.getItem('jwt');
     if (!token) {
         console.error('JWT token not found in cookies. User might not be logged in.');
         return;
     }
-
     let userId: string;
     try {
       const decodedToken: any = jwtDecode(token);
-      userId = decodedToken.nameid; 
+      userId = decodedToken.nameid;
     } catch (error) {
       console.error('Error decoding JWT token:', error);
       return;
@@ -93,14 +92,16 @@ export class AlbumPageComponent {
     this.albumService.getAlbumById(id).subscribe(observer);
   }
 
-  getCookie(name: string): string | null {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-      const [key, value] = cookie.trim().split('=');
-      if (key === name) {
-        return decodeURIComponent(value);
+  logout(): void {
+    const observer = {
+      next: (data: any) => {
+        console.log('Logout successful', data);
+        this.currentUser = null;
+      },
+      error: (error: any) => {
+        console.error('Logout error', error);
       }
     }
-    return null; // Return null if the cookie is not found
+    this.authorizationService.logout().subscribe(observer);
   }
 }
