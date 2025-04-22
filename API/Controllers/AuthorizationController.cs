@@ -91,8 +91,8 @@ namespace API.Controllers
             return new UserDTO { UserName = user.UserName, Email = user.Email, Token = token };
         }
 
-        [HttpPost("logout")]
         [Authorize]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             var email = User.FindFirstValue("email");
@@ -115,8 +115,8 @@ namespace API.Controllers
             return Ok("Logged out successfully.");
         }
 
-        [HttpGet("current")]
         [Authorize]
+        [HttpGet("current")]
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var email = User.FindFirstValue("email");
