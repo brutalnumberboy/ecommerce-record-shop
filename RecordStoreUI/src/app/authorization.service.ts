@@ -13,21 +13,17 @@ export class AuthorizationService {
   constructor(private http: HttpClient) { }
 
   login(email: string, password: string) {
-    const url = `${this.apiUrl}/login`;
-    return this.http.post(url, { email, password }, {withCredentials: true});
+    return this.http.post(`${this.apiUrl}/login`, { email, password }, {withCredentials: true});
   }
   
   register(userName: string, email: string, password: string) {
-    const url = `${this.apiUrl}/register`;
-    return this.http.post(url, { userName, email, password }, {withCredentials: true});
+    return this.http.post(`${this.apiUrl}/register`, { userName, email, password }, {withCredentials: true});
   }
   
   getCurrentUser(): Observable<UserDTO>{
-    const url = `${this.apiUrl}/current`;
-    return this.http.get<UserDTO>(url, {withCredentials: true});
+    return this.http.get<UserDTO>(`${this.apiUrl}/current`, {withCredentials: true});
   }
   logout(): Observable<any> {
-    const url = `${this.apiUrl}/logout`;
-    return this.http.post(url, {}, { withCredentials: true });
+    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true });
   }
 }
