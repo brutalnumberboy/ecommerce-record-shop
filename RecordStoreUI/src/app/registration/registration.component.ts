@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthorizationService } from '../authorization.service';
 
@@ -12,21 +12,21 @@ export interface UserDTO {
 
 @Component({
   selector: 'app-registration',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   standalone: true,
   providers: [AuthorizationService],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit{
-
+  errorMessage: string | null = null;
   registerData = {
     userName: '',
     email: '',
     password: ''
   };
 
-  constructor(private authorizationService: AuthorizationService) {
+  constructor(private authorizationService: AuthorizationService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -35,13 +35,21 @@ export class RegistrationComponent implements OnInit{
   register() {
     const observer = {
       next: (data: any) => {
+        this.errorMessage = null;
         console.log('Registration successful', data);
         const token = data.token;
-        localStorage.setItem('jwt', token); // Store the JWT in local storage
+        localStorage.setItem('jwt', token); 
+        this.router.navigate(['/login']);
 
       },
       error: (err: any) => {
-        console.error('Registration error', err);
+        if (err.error && err.error.errors) {
+          this.errorMessage = Object.values(err.error.errors).join(' ');
+        } else if (err.error && err.error.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Registration failed. Please try again.';
+        }
       }
     }
     this.authorizationService.register(this.registerData.userName, this.registerData.email, this.registerData.password).subscribe(observer);

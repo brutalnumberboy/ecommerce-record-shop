@@ -2,12 +2,15 @@ import { Component } from '@angular/core';
 import { AlbumService } from '../album.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthorizationService } from '../authorization.service';
+import { UserDTO } from '../authorization/authorization.component';
+
 
 @Component({
   selector: 'app-albums',
   imports: [CommonModule, RouterLink],
   standalone: true,
-  providers: [AlbumService],
+  providers: [AlbumService, AuthorizationService],
   templateUrl: './albums.component.html',
   styleUrl: './albums.component.css'
 })
@@ -18,13 +21,27 @@ export class AlbumsComponent {
   years: number[] = [];
   albums: any[] = [];
   filteredAlbums: any[] = [];
+  currentUser: UserDTO | null = null;
+  
 
-  constructor (private albumService: AlbumService) {
+  constructor (private albumService: AlbumService, private authorizationService: AuthorizationService) {
+    this.getAlbums();
   }
   ngOnInit(): void {
     this.getGenres();
     this.getYears();
     this.getAlbums();
+    const observer = {
+      next: (data: any) => {
+        console.log('Current user:', data);
+        this.currentUser = data;
+      },
+      error: (error: any) => {
+        console.error('Error fetching current user:', error);
+      }
+    }
+    this.authorizationService.getCurrentUser().subscribe(observer);
+
   }
 
   getAlbums(): void {
@@ -81,7 +98,6 @@ export class AlbumsComponent {
 
   onGenreChange(event: any): void {
     const genre = event.target.value;
-    console.log('onGenreChange called, genre:', genre, 'checked:', event.target.checked);
     if (event.target.checked){
       this.selectedGenres.push(genre);
     } else {
@@ -89,6 +105,7 @@ export class AlbumsComponent {
     }
     this.filterAlbumsByYearAndGenre()
   }
+  
   onYearChange(event: any): void {
     const year = event.target.value;
     if (event.target.checked){
@@ -112,7 +129,20 @@ export class AlbumsComponent {
       this.albumService.filterAlbumsByGenreOrYear(this.selectedGenres, this.selectedYears).subscribe(observer);
     } else {
       this.filteredAlbums = [...this.albums];
-    }      
+    } 
+         
   }
- 
+  logout(): void {
+    const observer = {
+      next: (data: any) => {
+        console.log('Logout successful', data);
+        this.currentUser = null;
+      },
+      error: (error: any) => {
+        console.error('Logout error', error);
+      }
+    }
+    this.authorizationService.logout().subscribe(observer);
+  }
+
 }
