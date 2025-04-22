@@ -1,6 +1,9 @@
 <div class="authorization-container">
     <h2>Login</h2>
     <form (ngSubmit)="login()">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
       <div>
         <label for="login-email">Email:</label>
         <input type="email" id="login-email" name="loginEmail" [(ngModel)]="loginData.email" required>
@@ -9,9 +12,7 @@
         <label for="login-password">Password:</label>
         <input type="password" id="login-password" name="loginPassword" [(ngModel)]="loginData.password" required>
       </div>
-      <button type="submit" routerLink="/login">Login</button>
+      <button type="submit">Login</button>
     </form>
-    <a href="/register" class="btn">Register</a>
-  
-    
-  </div>
+    <a class="btn">Register</a> 
+</div>

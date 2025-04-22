@@ -1,6 +1,9 @@
 <div class="registration-container">
 <h2>Register</h2>
     <form (ngSubmit)="register()">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
       <div>
         <label for="register-username">Username:</label>
         <input type="text" id="register-username" name="registerUserName" [(ngModel)]="registerData.userName" required>
