@@ -1,0 +1,86 @@
+.registration-container {
+    max-width: 420px;
+    margin: 48px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    padding: 36px 28px 28px 28px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  
+  .registration-container h2 {
+    margin-bottom: 24px;
+    color: #222;
+    font-size: 1.7rem;
+    text-align: center;
+  }
+  
+  .registration-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .registration-container label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 4px;
+  }
+  
+  .registration-container input[type="text"],
+  .registration-container input[type="email"],
+  .registration-container input[type="password"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 2px;
+  }
+  
+  .registration-container button[type="submit"] {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  
+  .registration-container button[type="submit"]:hover {
+    background: #0d47a1;
+  }
+  
+  .registration-container .btn {
+    display: block;
+    margin: 18px auto 0 auto;
+    background: #222;
+    color: #fff;
+    padding: 8px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+  }
+  
+  .registration-container .btn:hover {
+    background: #444;
+  }
+  
+  .error-message {
+    color: #e53935;
+    background: #fff3f3;
+    border: 1px solid #ffcdd2;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    text-align: center;
+  }
