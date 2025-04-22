@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { BasketItemDTO, BasketService, UserBasketDTO } from '../basket.service';
+import { BasketService, UserBasketDTO } from '../basket.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthorizationService } from '../authorization.service';
 import { UserDTO, } from '../authorization/authorization.component';
-import { BasketItemInputDTO } from '../basket.service';
-import { jwtDecode } from 'jwt-decode';
 import { RouterLink } from '@angular/router';
 
 
@@ -26,11 +24,7 @@ export class BasketComponent {
     shippingAddress: '',
     shippingPrice: 5.99
   };
-  basketItem: BasketItemInputDTO = {
-    albumId: '',
-    amount: 0
-  }
-
+ 
 
   constructor(private basketService: BasketService, private authorizationService: AuthorizationService) { }
   ngOnInit() {
@@ -73,10 +67,6 @@ export class BasketComponent {
       }
     };
     this.basketService.removeFromBasket(item.albumId).subscribe(observer);
-  }
-
-  logItem(item: any): void {
-    console.log('Item:', item);
   }
 
 }
