@@ -47,49 +47,6 @@ namespace API.Controllers
             return userId;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<UserBasketDTO>> createUserBasket([FromBody] UserBasketDTO basket)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-            {
-                return Unauthorized("User not logged in.");
-            }
-            decimal totalPrice = 0;
-            var basketItems = new List<BasketItem>();
-
-            foreach (var item in basket.BasketItems)
-            {
-                var album = await _context.Albums.FirstOrDefaultAsync(a => a.Id == item.AlbumId);
-                if (album == null)
-                {
-                    return BadRequest($"Album with ID {item.AlbumId} not found.");
-                }
-
-                basketItems.Add(new BasketItem
-                {
-                    Amount = item.Amount,
-                    AlbumId = item.AlbumId,
-                    Album = album, 
-                    UserId = userId
-                });
-                totalPrice += album.Price * item.Amount; 
-
-            }
-            var userBasket = new UserBasket
-            {
-                BasketItems = basketItems,
-                TotalPrice = totalPrice,
-                ShippingAddress = basket.ShippingAddress,
-                ShippingPrice = basket.ShippingPrice,
-                UserId = userId,
-            };
-
-            _context.UserBaskets.Add(userBasket);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(getBasketByUserId), new { id = userId }, basket);
-        }
-
         [Authorize]
         [HttpPut("current")]
         public async Task<ActionResult<UserBasketDTO>> updateUserBasket([FromBody] UserBasketInputDTO basket)
