@@ -1,7 +1,7 @@
 <div class="homepage-container">
     <header class="header">
     <nav>
-        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/albums" class="btn">Explore</a>
         <a routerLink="/search" class="btn">Search</a>
         <ng-container *ngIf="currentUser; else showLogin">
             <a href="/basket" class="btn">User</a>
@@ -15,10 +15,13 @@
     </header>
   
     <section id="features" class="features">
+      <h1>Just in</h1>
         <div class="albums">
             <div *ngIf="randomAlbums.length === 0">No albums available.</div>
-            <div *ngFor="let album of randomAlbums" class="album" style="background-color: #FF0000;">
+            <div *ngFor="let album of randomAlbums" class="album">
+              <a [routerLink]="['/albums', album.id]">
                 <img [src]="album.imageUrl" [alt]="album.title">
+              </a>
             </div>
         </div>
     </section>

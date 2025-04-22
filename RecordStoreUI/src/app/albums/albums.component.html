@@ -1,8 +1,15 @@
 <div class="albums-container">
   <header class="header">
     <nav>
-        <a routerLink="/albums" class="btn">Bestsellers</a>
         <a routerLink="/search" class="btn">Search</a>
+        <ng-container *ngIf="currentUser; else showLogin">
+            <a href="/basket" class="btn">User</a>
+            <span class="btn">{{ currentUser.userName }}</span>
+            <button (click)="logout()" routerLink="/login">Logout</button>
+          </ng-container>
+          <ng-template #showLogin>
+            <a routerLink="/login" class="btn">Login</a>
+          </ng-template>
     </nav>
     </header>
     <div class="filters">
