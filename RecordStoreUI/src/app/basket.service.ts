@@ -18,15 +18,15 @@ export interface UserBasketDTO {
   shippingPrice: number;
 }
 
+export interface BasketItemInputDTO {
+  albumId: string;
+  amount: number;
+}
+
 export interface UserBasketInputDTO {
   basketItems: BasketItemDTO[];
   shippingAddress: string;
   shippingPrice: number;
-}
-
-export interface BasketItemInputDTO {
-  albumId: string;
-  amount: number;
 }
 
 @Injectable({
