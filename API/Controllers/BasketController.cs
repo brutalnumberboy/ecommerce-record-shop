@@ -220,16 +220,19 @@ namespace API.Controllers
 
             var basketItem = userBasket.BasketItems.FirstOrDefault(b => b.AlbumId == basketItemDTO.AlbumId);
 
+            var basketItemAmount = basketItem?.Amount;
+
             if (basketItem == null)
             {
                 return NotFound("Album not found in the basket.");
             }
 
+            userBasket.TotalPrice -= album.Price * basketItem.Amount;
+
             userBasket.BasketItems.Remove(basketItem);
-            userBasket.TotalPrice += album.Price * basketItemDTO.Amount;
 
             await _context.SaveChangesAsync();
-            return Ok("Album removed from basket.");
+            return Ok(userBasket);
         }
 
         public async Task<ActionResult<UserBasket>> getBasketByUserId(string userId)
