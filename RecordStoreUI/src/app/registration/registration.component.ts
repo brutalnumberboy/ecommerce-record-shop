@@ -19,6 +19,7 @@ export interface UserDTO {
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit{
+  successMessage: string | null = null;
   errorMessage: string | null = null;
   registerData = {
     userName: '',
@@ -36,13 +37,12 @@ export class RegistrationComponent implements OnInit{
     const observer = {
       next: (data: any) => {
         this.errorMessage = null;
-        console.log('Registration successful', data);
+        this.successMessage = 'Registration is successful';
         const token = data.token;
         localStorage.setItem('jwt', token); 
-        this.router.navigate(['/login']);
-
       },
       error: (err: any) => {
+        this.successMessage = null;
         if (err.error && err.error.errors) {
           this.errorMessage = Object.values(err.error.errors).join(' ');
         } else if (err.error && err.error.message) {
