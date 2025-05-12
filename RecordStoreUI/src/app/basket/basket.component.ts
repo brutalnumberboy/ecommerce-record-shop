@@ -17,14 +17,14 @@ import { RouterLink } from '@angular/router';
 })
 export class BasketComponent {
   currentUser: UserDTO | null = null;
-  
+
   basket: UserBasketDTO = {
     basketItems: [],
     totalPrice: 0,
     shippingAddress: '',
     shippingPrice: 5.99
   };
- 
+
 
   constructor(private basketService: BasketService, private authorizationService: AuthorizationService) { }
   ngOnInit() {
@@ -67,6 +67,7 @@ export class BasketComponent {
       }
     };
     this.basketService.removeFromBasket(item.albumId).subscribe(observer);
+    this.updateUserBasket();
   }
 
 }
