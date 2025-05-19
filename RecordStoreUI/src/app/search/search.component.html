@@ -21,9 +21,11 @@
       <ul>
         <li *ngFor="let album of searchResults">
           <h3> <a [routerLink]="['/albums', album.id]"> {{ album.title }} </a> by {{ album.artist }}</h3>
-          <img [src]="album.imageUrl" [alt]="album.title" width="100" />
           <p>Genre: {{ album.genre }}</p>
           <p>Released: {{ album.yearReleased }}</p>
+          <a [routerLink]="['/albums', album.id]">
+            <img [src]="album.imageUrl" [alt]="album.title" width="100" />
+          </a>
         </li>
       </ul>
     </div>

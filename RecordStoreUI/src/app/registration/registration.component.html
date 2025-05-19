@@ -4,6 +4,9 @@
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </div>
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
       <div>
         <label for="register-username">Username:</label>
         <input type="text" id="register-username" name="registerUserName" [(ngModel)]="registerData.userName" required>

@@ -2,7 +2,7 @@
   <header class="header">
     <nav>
         <a routerLink="/homepage" class="btn">Home</a>
-        <a routerLink="/albums" class="btn">Bestsellers</a>
+        <a routerLink="/albums" class="btn">Discover</a>
         <a routerLink="/search" class="btn">Search</a>
     </nav>
   </header>
@@ -13,20 +13,20 @@
         <h3>{{ item.title }}</h3>
         <p>Artist: {{ item.artist }}</p>
         <p>Price: {{ item.price | currency }}</p>
-        <p>Amount: 
+        <p>Amount:
           <input type="number" [(ngModel)]="item.amount" min="1" />
         </p>
-        <button (click)="removeFromBasket(item); updateUserBasket()">Remove</button>
+        <button (click)="removeFromBasket(item)">Remove</button>
       </div>
     </div>
     <ng-template #emptyBasket>
       <p>Your basket is empty.</p>
     </ng-template>
-    
+
     <div class="basket-summary">
       <p>Total Price: {{ basket.totalPrice | currency }}</p>
       <p>Shipping Price: {{ basket.shippingPrice | currency }}</p>
-      <p>Shipping Address: 
+      <p>Shipping Address:
         <input type="text" [(ngModel)]="basket.shippingAddress" />
       </p>
       <button (click)="updateUserBasket()">Save Basket</button>

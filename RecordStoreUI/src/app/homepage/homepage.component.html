@@ -4,16 +4,16 @@
         <a routerLink="/albums" class="btn">Explore</a>
         <a routerLink="/search" class="btn">Search</a>
         <ng-container *ngIf="currentUser; else showLogin">
-            <a href="/basket" class="btn">User</a>
+            <a href="/basket" class="btn">Your Basket</a>
             <span class="btn">{{ currentUser.userName }}</span>
             <button (click)="logout()" routerLink="/login">Logout</button>
-          </ng-container>
-          <ng-template #showLogin>
-            <a routerLink="/login" class="btn">Login</a>
-          </ng-template>
+        </ng-container>
+        <ng-template #showLogin>
+          <a routerLink="/login" class="btn">Login</a>
+        </ng-template>
     </nav>
     </header>
-  
+
     <section id="features" class="features">
       <h1>Just in</h1>
         <div class="albums">
@@ -25,7 +25,7 @@
             </div>
         </div>
     </section>
-  
+
     <footer class="footer">
       <p>&hearts; 2025 Record Shop.</p>
     </footer>
