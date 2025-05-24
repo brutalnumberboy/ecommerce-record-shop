@@ -1,24 +1,29 @@
 <div class="navigation">
   <header class="header">
     <nav>
-        <a routerLink="/search" class="btn">Search</a>
-        <ng-container *ngIf="currentUser; else showLogin">
-            <a href="/basket" class="btn">Your Basket</a>
-            <span class="btn">{{ currentUser.userName }}</span>
-            <button (click)="logout()" routerLink="/login">Logout</button>
-          </ng-container>
-          <ng-template #showLogin>
-            <a routerLink="/login" class="btn">Login</a>
-          </ng-template>
+      <a routerLink="/search" class="btn">Search</a>
+      <ng-container *ngIf="currentUser; else showLogin">
+        <a href="/basket" class="btn">Your Basket</a>
+        <span class="btn">{{ currentUser.userName }}</span>
+        <button (click)="logout()" routerLink="/login">Logout</button>
+      </ng-container>
+      <ng-template #showLogin>
+        <a routerLink="/login" class="btn">Login</a>
+      </ng-template>
     </nav>
-    </header>
+  </header>
 </div>
 <div class="album-details-container" *ngIf="album">
-    <h1>{{ album.title }}</h1>
-    <h2>{{ album.artist }}</h2>
-    <p>Genre: {{ album.genre }}</p>
-    <p>Released: {{ album.yearReleased }}</p>
-    <p>{{ album.description }}</p>
-    <img [src]="album.imageUrl" [alt]="album.title"/>
+  <h1>{{ album.title }}</h1>
+  <h2>{{ album.artist }}</h2>
+  <p>Genre: {{ album.genre }}</p>
+  <p>Released: {{ album.yearReleased }}</p>
+  <p>{{ album.description }}</p>
+  <img [src]="album.imageUrl" [alt]="album.title" />
+  <ng-container *ngIf="currentUser; else showError">
     <button (click)="addToBasket()">Add to Basket</button>
-  </div>
+  </ng-container>
+  <ng-template #showError>
+    <p class="error-message">Log in to add item to the basket.</p>
+  </ng-template>
+</div>
