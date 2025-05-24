@@ -7,11 +7,12 @@ import { BasketService } from '../basket.service';
 import { UserDTO } from '../registration/registration.component';
 import { AuthorizationService } from '../authorization.service';
 import { jwtDecode } from 'jwt-decode';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-album-page',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   standalone: true,
   providers: [AlbumService, BasketService, AuthorizationService],
   templateUrl: './album-page.component.html',
