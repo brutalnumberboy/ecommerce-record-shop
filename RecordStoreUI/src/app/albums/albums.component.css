@@ -81,13 +81,14 @@
 }
 
 .album-list {
-  flex: 2;
+  flex: 4;
   display: flex;
   flex-wrap: wrap;
   gap: 24px;
   justify-content: flex-start;
 
 }
+
 .main-content {
   display: flex;
   align-items: flex-start;
@@ -99,7 +100,7 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-  width: 200px;
+  width: 190px;
   padding: 16px 12px;
   transition: box-shadow 0.2s;
 }

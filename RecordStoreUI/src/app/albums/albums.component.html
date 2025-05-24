@@ -40,7 +40,7 @@
           </div>
         </div>
       <div class="album-list">
-          <div class="album-card" *ngFor="let album of filteredAlbums">
+          <div class="album-card" *ngFor="let album of pagedAlbums()">
           <a [routerLink]="['/albums', album.id]">
             <img [src]="album.imageUrl" [alt]="album.title" />
             <div class="album-details">
@@ -53,4 +53,9 @@
           </div>
       </div>
   </div>
+     <mat-paginator
+            [length]="filteredAlbums.length"
+            [pageSize]="pageSize"
+            (page)="onPageChange($event)">
+          </mat-paginator>
 </div>

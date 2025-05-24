@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthorizationService } from '../authorization.service';
 import { UserDTO } from '../authorization/authorization.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 @Component({
   selector: 'app-albums',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, MatPaginatorModule],
   standalone: true,
   providers: [AlbumService, AuthorizationService],
   templateUrl: './albums.component.html',
@@ -22,11 +23,14 @@ export class AlbumsComponent {
   albums: any[] = [];
   filteredAlbums: any[] = [];
   currentUser: UserDTO | null = null;
+  pageSize: number = 6;
+  currentPage: number = 0;
   
 
   constructor (private albumService: AlbumService, private authorizationService: AuthorizationService) {
     this.getAlbums();
   }
+  
   ngOnInit(): void {
     this.getGenres();
     this.getYears();
@@ -56,6 +60,12 @@ export class AlbumsComponent {
       }
     };
     this.albumService.getAllAlbums().subscribe(observer);
+  }
+  
+  pagedAlbums(): any[] {
+    const startIndex = this.currentPage * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.filteredAlbums.slice(startIndex, endIndex);
   }
 
   getGenres(): void {
@@ -144,5 +154,8 @@ export class AlbumsComponent {
     }
     this.authorizationService.logout().subscribe(observer);
   }
-
+  onPageChange(event: any): void {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+  }
 }
