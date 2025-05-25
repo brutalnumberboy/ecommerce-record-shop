@@ -18,6 +18,7 @@
   <h2>{{ album.artist }}</h2>
   <p>Genre: {{ album.genre }}</p>
   <p>Released: {{ album.yearReleased }}</p>
+  <p>Price: {{ album.price | currency }}</p>
   <p>{{ album.description }}</p>
   <img [src]="album.imageUrl" [alt]="album.title" />
   <ng-container *ngIf="currentUser; else showError">
